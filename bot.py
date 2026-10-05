@@ -821,7 +821,22 @@ def main():
     app.add_handler(ChatMemberHandler(welcome, ChatMemberHandler.CHAT_MEMBER))
     app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, filter_message))
 
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # Render Free runs this bot as a Web Service. Telegram sends updates to the
+    # webhook, so the service can receive traffic even when the chat is quiet.
+    import os
+    port = int(os.getenv("PORT", "10000"))
+    host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+    if not host:
+        raise RuntimeError("RENDER_EXTERNAL_HOSTNAME is required on Render")
+    webhook_path = "/telegram/webhook"
+    webhook_url = f"https://{host}{webhook_path}"
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=port,
+        url_path=webhook_path.lstrip("/"),
+        webhook_url=webhook_url,
+        allowed_updates=Update.ALL_TYPES,
+    )
 
 if __name__ == "__main__":
     main()

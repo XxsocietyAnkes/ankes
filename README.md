@@ -95,3 +95,16 @@ Gunakan Environment Variables.
 ## PostgreSQL
 Schema dibuat otomatis saat bot start.
 Pengaturan setiap grup tersimpan di database sehingga tidak hilang karena restart aplikasi, selama database PostgreSQL tetap tersedia.
+
+
+## Render Free deployment
+
+This package is configured as a Render Web Service using Telegram webhook mode.
+
+- Service type: **Web Service**
+- Build command: `pip install -r requirements.txt`
+- Start command: `python bot.py`
+- Environment variables: `BOT_TOKEN`, `DATABASE_URL`
+- Render automatically provides `PORT` and `RENDER_EXTERNAL_HOSTNAME`.
+
+Render Free web services can spin down after 15 minutes without inbound traffic, so this is suitable for testing/hobby use and may have a delay after a quiet period.
